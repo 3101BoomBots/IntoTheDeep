@@ -30,7 +30,7 @@ public class Hardware {
 
     public void init(HardwareMap hardwareMap) {
         try {
-            frontLeft = hardwareMap.dcMotor.get("fl");
+            frontLeft = hardwareMap.dcMotor.get("leftFront");
             frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -42,7 +42,7 @@ public class Hardware {
         }
 
         try {
-            frontRight = hardwareMap.dcMotor.get("fr");
+            frontRight = hardwareMap.dcMotor.get("rightFront");
             frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -54,7 +54,7 @@ public class Hardware {
         }
 
         try {
-            backRight = hardwareMap.dcMotor.get("br");
+            backRight = hardwareMap.dcMotor.get("rightRear");
             backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -66,7 +66,7 @@ public class Hardware {
         }
 
         try {
-            backLeft = hardwareMap.dcMotor.get("bl");
+            backLeft = hardwareMap.dcMotor.get("leftRear");
             backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
