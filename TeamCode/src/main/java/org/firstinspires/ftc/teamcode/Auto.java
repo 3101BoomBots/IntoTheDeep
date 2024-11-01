@@ -69,7 +69,6 @@ public class Auto extends LinearOpMode{
 
         hw.setMotorsToRunToPosition();
         while(opModeIsActive() && hw.notInRange(targetPos)){
-            hw.telemetryHardware();
         }
 
         hw.setMotorsToPower(0);
