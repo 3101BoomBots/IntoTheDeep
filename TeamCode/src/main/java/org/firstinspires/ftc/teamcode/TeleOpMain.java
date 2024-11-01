@@ -14,8 +14,8 @@ public class TeleOpMain extends LinearOpMode{
 
         while (opModeIsActive()) {
             double drive = -gamepad2.left_stick_y;
-            double turn = gamepad1.right_stick_x;
             double strafe = gamepad1.left_stick_x;
+            double turn = gamepad1.right_stick_x;
 
             double maxPower = Math.max(Math.abs(drive) + Math.abs(turn) + Math.abs(strafe), 1);
 
