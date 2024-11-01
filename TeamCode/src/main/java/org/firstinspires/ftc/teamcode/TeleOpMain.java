@@ -13,16 +13,16 @@ public class TeleOpMain extends LinearOpMode{
         hw.setMotorsToPower(0);
 
         while (opModeIsActive()) {
-            double drive = -gamepad2.left_stick_y;
+            double drive = -gamepad1.left_stick_y;
             double strafe = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
             double maxPower = Math.max(Math.abs(drive) + Math.abs(turn) + Math.abs(strafe), 1);
 
-            hw.frontLeft.setPower(((drive - turn - strafe) / maxPower));
-            hw.frontRight.setPower(((drive + turn + strafe) / maxPower));
-            hw.backRight.setPower(((drive + turn - strafe) / maxPower));
-            hw.backLeft.setPower(((drive - turn + strafe) / maxPower));
+            hw.frontLeft.setPower(((drive + strafe + turn) / maxPower));
+            hw.backLeft.setPower(((drive - strafe + turn) / maxPower));
+            hw.frontRight.setPower(((drive - strafe - turn) / maxPower));
+            hw.backRight.setPower(((drive + strafe - turn) / maxPower));
 
             hw.telemetryHardware();
         }
