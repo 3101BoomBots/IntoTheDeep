@@ -14,6 +14,7 @@ public class Hardware {
     public DcMotor frontRight;
     public DcMotor backRight;
     public DcMotor backLeft;
+    public DcMotor slidesMotor;
     private IMU gyro;
     private final OpMode opMode;
     private static Hardware myInstance;
@@ -33,7 +34,7 @@ public class Hardware {
         try {
             frontLeft = hardwareMap.dcMotor.get("leftFront");
             frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             opMode.telemetry.addData("FrontLeftMotor: ", "Initialized");
         } catch (Exception e) {
@@ -45,7 +46,7 @@ public class Hardware {
         try {
             frontRight = hardwareMap.dcMotor.get("rightFront");
             frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             opMode.telemetry.addData("FrontRightMotor: ", "Initialized.");
         } catch (Exception e) {
@@ -57,7 +58,7 @@ public class Hardware {
         try {
             backRight = hardwareMap.dcMotor.get("rightRear");
             backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             opMode.telemetry.addData("BackRightMotor: ", "Initialized.");
         } catch (Exception e) {
@@ -69,7 +70,7 @@ public class Hardware {
         try {
             backLeft = hardwareMap.dcMotor.get("leftRear");
             backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             opMode.telemetry.addData("BackLeftMotor: ", "Initialized.");
         } catch (Exception e) {
@@ -77,6 +78,19 @@ public class Hardware {
         } finally {
             opMode.telemetry.update();
         }
+//
+//        try {
+//            slidesMotor = hardwareMap.dcMotor.get("slides");
+//            slidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            slidesMotor.setTargetPosition(0);
+//            slidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            slidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//            opMode.telemetry.addData("SlidesMotor: ", "Initialized.");
+//        } catch (Exception e) {
+//            opMode.telemetry.addData("SlidesMotor: ", "Error");
+//        } finally {
+//            opMode.telemetry.update();
+//        }
 
         try {
             gyro = hardwareMap.get(IMU.class, "imu");
@@ -127,6 +141,7 @@ public class Hardware {
         opMode.telemetry.addData("FrontRightPower: ", frontRight.getPower());
         opMode.telemetry.addData("backRightPower: ", backRight.getPower());
         opMode.telemetry.addData("backLeftPower: ", backLeft.getPower());
+        opMode.telemetry.addData("IMU Angle: ", getGyroAngle());
 
         opMode.telemetry.update();
     }

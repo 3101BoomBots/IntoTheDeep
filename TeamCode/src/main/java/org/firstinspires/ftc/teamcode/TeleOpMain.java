@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @TeleOp(name = "TeleOpMain")
 public class TeleOpMain extends LinearOpMode{
     Hardware hw = Hardware.getInstance(this);
+    final int SLIDES_INCREMENT = 10;
+    final int MAX_SLIDES_POS = 100;
     @Override
     public void runOpMode() throws InterruptedException {
         hw.init(hardwareMap);
@@ -23,6 +25,10 @@ public class TeleOpMain extends LinearOpMode{
             hw.backLeft.setPower(((drive - strafe + turn) / maxPower));
             hw.frontRight.setPower(((drive - strafe - turn) / maxPower));
             hw.backRight.setPower(((drive + strafe - turn) / maxPower));
+
+//            if (gamepad1.a) {
+//                if (hw.slidesMotor.getTargetPosition() < MAX_SLIDES_POS) hw.slidesMotor.setTargetPosition(hw.slidesMotor.getTargetPosition() + SLIDES_INCREMENT);
+//            }
 
             hw.telemetryHardware();
         }
