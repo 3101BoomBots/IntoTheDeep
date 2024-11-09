@@ -8,6 +8,8 @@ public class TeleOpMain extends LinearOpMode{
     Hardware hw = Hardware.getInstance(this);
     final int SLIDES_INCREMENT = 10;
     final int MAX_SLIDES_POS = 100;
+    final int PIVOT_INCREMENT = 10;
+    final int MAX_PIVOT_POS = 100;
     @Override
     public void runOpMode() throws InterruptedException {
         hw.init(hardwareMap);
@@ -26,9 +28,11 @@ public class TeleOpMain extends LinearOpMode{
             hw.frontRight.setPower(((drive - strafe - turn) / maxPower));
             hw.backRight.setPower(((drive + strafe - turn) / maxPower));
 
-            if (gamepad1.a) {
-                if (hw.slidesMotor.getTargetPosition() < MAX_SLIDES_POS) hw.slidesMotor.setTargetPosition(hw.slidesMotor.getTargetPosition() + SLIDES_INCREMENT);
-            }
+            if (gamepad1.a && hw.slidesPushMotor.getTargetPosition() < MAX_SLIDES_POS)
+                hw.slidesPushMotor.setTargetPosition(hw.slidesPushMotor.getTargetPosition() + SLIDES_INCREMENT);
+
+            if (gamepad1.b && hw.slidesPivotMotor.getTargetPosition() < MAX_PIVOT_POS)
+                hw.slidesPivotMotor.setTargetPosition(hw.slidesPivotMotor.getTargetPosition() + PIVOT_INCREMENT);
 
             hw.telemetryHardware();
         }
