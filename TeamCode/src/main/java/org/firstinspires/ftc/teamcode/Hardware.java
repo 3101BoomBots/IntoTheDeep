@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -11,14 +12,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Hardware {
-    public DcMotor frontLeft;
-    public DcMotor frontRight;
-    public DcMotor backRight;
-    public DcMotor backLeft;
-    public DcMotor slidesPushMotor;
-    public DcMotor slidesPivotMotor;
-    public CRServo intakeServo;  // CRServo = continuous servo
-    private IMU gyro;
+    public DcMotor frontLeft = null;
+    public DcMotor frontRight = null;
+    public DcMotor backRight = null;
+    public DcMotor backLeft = null;
+    public DcMotor slidesPushMotor = null;
+    public DcMotor slidesPivotMotor = null;
+    public CRServo intakeServo = null;  // CRServo = continuous servo
+    private IMU gyro = null;
     private final OpMode opMode;
     private static Hardware myInstance;
 
@@ -35,30 +36,33 @@ public class Hardware {
 
     public void init(HardwareMap hardwareMap) {
         frontLeft = hardwareMap.dcMotor.get("leftFront");
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         opMode.telemetry.addData("FrontLeftMotor: ", "Initialized");
 
         frontRight = hardwareMap.dcMotor.get("rightFront");
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         opMode.telemetry.addData("FrontRightMotor: ", "Initialized.");
 
         backRight = hardwareMap.dcMotor.get("rightRear");
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         opMode.telemetry.addData("BackRightMotor: ", "Initialized.");
 
         backLeft = hardwareMap.dcMotor.get("leftRear");
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         opMode.telemetry.addData("BackLeftMotor: ", "Initialized.");
 
         slidesPushMotor = hardwareMap.dcMotor.get("slides");
+        slidesPushMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         slidesPushMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slidesPushMotor.setTargetPosition(0);
         slidesPushMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -70,7 +74,6 @@ public class Hardware {
         slidesPivotMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        slidesPivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeServo = hardwareMap.crservo.get("intake");
-        intakeServo.setPower(0);
 
         try {
             gyro = hardwareMap.get(IMU.class, "imu");
@@ -121,9 +124,11 @@ public class Hardware {
         opMode.telemetry.addData("FrontRightPower: ", frontRight.getPower());
         opMode.telemetry.addData("backRightPower: ", backRight.getPower());
         opMode.telemetry.addData("backLeftPower: ", backLeft.getPower());
-        opMode.telemetry.addData("", "");
-        opMode.telemetry.addData("Slides Motor: ", slidesPushMotor.getPower());
-        opMode.telemetry.addData("Pivot Motor: ", slidesPivotMotor.getPower());
+        opMode.telemetry.addData("Arm", "");
+        opMode.telemetry.addData("Slides Motor: ", slidesPushMotor.getCurrentPosition());
+        opMode.telemetry.addData("Slides Motor Target: ", slidesPushMotor.getTargetPosition());
+        opMode.telemetry.addData("Pivot Motor: ", slidesPivotMotor.getCurrentPosition());
+        opMode.telemetry.addData("Pivot Motor Target: ", slidesPivotMotor.getTargetPosition());
         opMode.telemetry.addData("Intake Servo: ", intakeServo.getPower());
         opMode.telemetry.addData("IMU Angle: ", getGyroAngle());
 
