@@ -26,9 +26,9 @@ public class TeleOpMain extends LinearOpMode{
             hw.frontRight.setPower(((drive - strafe - turn) / maxPower));
             hw.backRight.setPower(((drive + strafe - turn) / maxPower));
 
-//            if (gamepad1.a) {
-//                if (hw.slidesMotor.getTargetPosition() < MAX_SLIDES_POS) hw.slidesMotor.setTargetPosition(hw.slidesMotor.getTargetPosition() + SLIDES_INCREMENT);
-//            }
+            if (gamepad1.a) {
+                if (hw.slidesMotor.getTargetPosition() < MAX_SLIDES_POS) hw.slidesMotor.setTargetPosition(hw.slidesMotor.getTargetPosition() + SLIDES_INCREMENT);
+            }
 
             hw.telemetryHardware();
         }

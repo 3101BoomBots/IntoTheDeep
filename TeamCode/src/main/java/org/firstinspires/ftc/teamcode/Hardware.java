@@ -31,66 +31,35 @@ public class Hardware {
     }
 
     public void init(HardwareMap hardwareMap) {
-        try {
-            frontLeft = hardwareMap.dcMotor.get("leftFront");
-            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft = hardwareMap.dcMotor.get("leftFront");
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            opMode.telemetry.addData("FrontLeftMotor: ", "Initialized");
-        } catch (Exception e) {
-            opMode.telemetry.addData("FrontLeftMotor: ", "Error");
-        } finally{
-            opMode.telemetry.update();
-        }
+//            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        opMode.telemetry.addData("FrontLeftMotor: ", "Initialized");
 
-        try {
-            frontRight = hardwareMap.dcMotor.get("rightFront");
-            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight = hardwareMap.dcMotor.get("rightFront");
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            opMode.telemetry.addData("FrontRightMotor: ", "Initialized.");
-        } catch (Exception e) {
-            opMode.telemetry.addData("FrontRightMotor: ", "Error");
-        } finally {
-            opMode.telemetry.update();
-        }
+//            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        opMode.telemetry.addData("FrontRightMotor: ", "Initialized.");
 
-        try {
-            backRight = hardwareMap.dcMotor.get("rightRear");
-            backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight = hardwareMap.dcMotor.get("rightRear");
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            opMode.telemetry.addData("BackRightMotor: ", "Initialized.");
-        } catch (Exception e) {
-            opMode.telemetry.addData("BackRightMotor: ", "Error");
-        } finally {
-            opMode.telemetry.update();
-        }
+//            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        opMode.telemetry.addData("BackRightMotor: ", "Initialized.");
 
-        try {
-            backLeft = hardwareMap.dcMotor.get("leftRear");
-            backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft = hardwareMap.dcMotor.get("leftRear");
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            opMode.telemetry.addData("BackLeftMotor: ", "Initialized.");
-        } catch (Exception e) {
-            opMode.telemetry.addData("BackLeftMotor: ", "Error");
-        } finally {
-            opMode.telemetry.update();
-        }
+//            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        opMode.telemetry.addData("BackLeftMotor: ", "Initialized.");
 //
-//        try {
-//            slidesMotor = hardwareMap.dcMotor.get("slides");
-//            slidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            slidesMotor.setTargetPosition(0);
-//            slidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slidesMotor = hardwareMap.dcMotor.get("slides");
+        slidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slidesMotor.setTargetPosition(0);
+        slidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            slidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//            opMode.telemetry.addData("SlidesMotor: ", "Initialized.");
-//        } catch (Exception e) {
-//            opMode.telemetry.addData("SlidesMotor: ", "Error");
-//        } finally {
-//            opMode.telemetry.update();
-//        }
 
         try {
             gyro = hardwareMap.get(IMU.class, "imu");
