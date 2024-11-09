@@ -21,9 +21,11 @@ public class PedroAuto extends LinearOpMode {
         robot.setStartingPose(initialPos);
         // test
         PathChain firstPath = robot.pathBuilder().addPath(new BezierLine(
-                        new Point(new Pose(2, 2)), new Point(new Pose(6, 13))
+                        new Point(new Pose(2, 2)), new Point(new Pose(10, 13))
                 )).build();
         waitForStart();
         robot.followPath(firstPath);
+        while (opModeIsActive())
+            robot.update();
     }
 }
