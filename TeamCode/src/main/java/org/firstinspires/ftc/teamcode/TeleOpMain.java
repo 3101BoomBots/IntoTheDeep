@@ -58,7 +58,7 @@ public class TeleOpMain extends LinearOpMode{
 
             hw.slidesPushMotor.setTargetPosition((int) (hw.slidesPushMotor.getTargetPosition() - (slides * SLIDES_INCREMENT)));
             if(hw.slidesPushMotor.getTargetPosition() < 0) hw.slidesPushMotor.setTargetPosition(0);
-            if(hw.slidesPivotMotor.getTargetPosition() > STRAIGHT_PIVOT || hw.slidesPivotMotor.getTargetPosition() < 2200) {
+            if(hw.slidesPivotMotor.getTargetPosition() > STRAIGHT_PIVOT + 200 || hw.slidesPivotMotor.getTargetPosition() < 2200) {
                 if(hw.slidesPushMotor.getTargetPosition() > HIGH_MAX_SLIDES) hw.slidesPushMotor.setTargetPosition(HIGH_MAX_SLIDES);
             } else if(hw.slidesPushMotor.getTargetPosition() > MAX_SLIDES_POS) hw.slidesPushMotor.setTargetPosition(MAX_SLIDES_POS);
 
