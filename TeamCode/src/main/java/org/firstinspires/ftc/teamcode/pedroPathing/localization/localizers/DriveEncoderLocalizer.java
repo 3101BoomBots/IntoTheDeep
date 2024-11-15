@@ -71,9 +71,9 @@ public class DriveEncoderLocalizer extends Localizer {
 
         // TODO: reverse any encoders necessary
         leftFront.setDirection(Encoder.FORWARD);
-        rightRear.setDirection(Encoder.REVERSE);
+        rightRear.setDirection(Encoder.FORWARD);
         leftRear.setDirection(Encoder.FORWARD);
-        rightRear.setDirection(Encoder.REVERSE);
+        rightRear.setDirection(Encoder.FORWARD);
 
         setStartPose(setStartPose);
         timer = new NanoTimer();

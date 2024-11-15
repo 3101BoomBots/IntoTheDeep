@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "AutoMain")
@@ -21,17 +22,13 @@ public class Auto extends LinearOpMode{
         hw.init(hardwareMap);
 
         waitForStart();
-        drive(10);
-        drive(20);
-        drive(20, 0.5);
-        turn(20);
-        turn(20, 0.5, 0.12);
-        turn(23);
-        turn(24, 0.3, 0.10);
-        strafe(20);
-        strafe(20, 0.5);
-        strafe(23);
-        strafe(23, 0.5);
+
+        hw.frontLeft.setPower(1);
+        hw.frontRight.setPower(-1);
+        hw.backRight.setPower(1);
+        hw.backLeft.setPower(-1);
+        hw.setTargets(40000);
+        while(opModeIsActive() && hw.notInRange(40000));
     }
 
     private void drive(double inches) {
