@@ -11,15 +11,28 @@ public class TeleOpMain extends LinearOpMode{
     double drive;
     double turn;
 
-    final int SLIDES_INCREMENT = 65;
-    final int MAX_SLIDES_POS = 1675;
-    final int PIVOT_INCREMENT = 80;
-    final int MAX_PIVOT_POS = 5300;  // MAX - 90deg (perpendicular to robot)  = 5633
+    final double SLOW_POWER = 0.35;
+    final int PIVOT_INCREMENT = 120;
     final double INTAKE_MAX_POWER = 1;
-    final int HIGH_MAX_SLIDES = 2250;
-    // 5163 PIVOT, 1971 Slides high basket
+    final int SLIDES_INCREMENT = 150;
+
+    // kD is the constant difference between these positions and the minimum zero point
+    final int kD_MAX_PIVOT = 5300;
+    final int kD_FACING_UP = 2620;
+    final int kD_FACING_DOWN = 2200;
+    int kD_MAX_SLIDES_POS = 1675;
+    final int kD_TALL_MAX_SLIDES = 2250;
+    // little more for safety
+    // MAX - 90deg (perpendicular to robot)  = 5633
     // Straight ahead -2500
-    final double STRAIGHT_PIVOT = 2600;  // little more for safety
+    // 5163 PIVOT, 1971 Slides high basket
+    int minSlidesPos = 0;
+    int minPivotPos = 0;
+    int maxSlidesPos;
+    int tallMaxSlides;
+    int maxPivotPos;
+    int facingUp;
+    int facingDown;
     @Override
     public void runOpMode() throws InterruptedException {
         hw.init(hardwareMap);
@@ -28,6 +41,12 @@ public class TeleOpMain extends LinearOpMode{
 
         double intakePower = 0.0;
         while (opModeIsActive()) {
+            maxPivotPos = minPivotPos + kD_MAX_PIVOT;
+            facingUp = minPivotPos + kD_FACING_UP;
+            facingDown = minPivotPos + kD_FACING_DOWN;
+            maxSlidesPos = minSlidesPos + kD_MAX_SLIDES_POS;
+            tallMaxSlides = minSlidesPos + kD_TALL_MAX_SLIDES;
+
             drive = -gamepad1.left_stick_y;
             strafe = gamepad1.left_stick_x;
             turn = gamepad1.right_stick_x;
@@ -37,11 +56,11 @@ public class TeleOpMain extends LinearOpMode{
             boolean dpadRightClicked = gamepad1.dpad_right;
             boolean dpadDownClicked = gamepad1.dpad_down;
 
-            if (dpadUpClicked || dpadRightClicked || dpadLeftClicked || dpadDownClicked) resetControls();
-            if(dpadUpClicked) drive = 0.5;
-            if(dpadDownClicked) drive = -0.5;
-            if(dpadLeftClicked) strafe = -0.5;
-            if(dpadRightClicked) strafe = 0.5;
+            if(dpadUpClicked || dpadRightClicked || dpadLeftClicked || dpadDownClicked) resetControls();
+            if(dpadUpClicked) drive += SLOW_POWER;
+            if(dpadDownClicked) drive -= SLOW_POWER;
+            if(dpadLeftClicked) strafe -= SLOW_POWER;
+            if(dpadRightClicked) strafe += SLOW_POWER;
 
             double maxPower = Math.max(Math.abs(drive) + Math.abs(turn) + Math.abs(strafe), 1.0);
 
@@ -57,19 +76,27 @@ public class TeleOpMain extends LinearOpMode{
             double pivot = gamepad2.left_stick_y;
 
             hw.slidesPushMotor.setTargetPosition((int) (hw.slidesPushMotor.getTargetPosition() - (slides * SLIDES_INCREMENT)));
-            if(hw.slidesPushMotor.getTargetPosition() < 0) hw.slidesPushMotor.setTargetPosition(0);
-            if(hw.slidesPivotMotor.getTargetPosition() > STRAIGHT_PIVOT + 200 || hw.slidesPivotMotor.getTargetPosition() < 2200) {
-                if(hw.slidesPushMotor.getTargetPosition() > HIGH_MAX_SLIDES) hw.slidesPushMotor.setTargetPosition(HIGH_MAX_SLIDES);
-            } else if(hw.slidesPushMotor.getTargetPosition() > MAX_SLIDES_POS) hw.slidesPushMotor.setTargetPosition(MAX_SLIDES_POS);
+            if (hw.slidesPushMotor.getTargetPosition() < minSlidesPos && !gamepad2.a)
+                hw.slidesPushMotor.setTargetPosition(minSlidesPos);
+            if(gamepad2.a && hw.slidesPushMotor.getTargetPosition() < 200) minSlidesPos = hw.slidesPushMotor.getCurrentPosition();
+
+            // Not facing straight ahead
+            if (hw.slidesPivotMotor.getTargetPosition() > facingUp || hw.slidesPivotMotor.getTargetPosition() < facingDown) {
+                if (hw.slidesPushMotor.getTargetPosition() > tallMaxSlides)
+                    hw.slidesPushMotor.setTargetPosition(tallMaxSlides);
+            } else if (hw.slidesPushMotor.getTargetPosition() > maxSlidesPos && !gamepad2.a)
+                hw.slidesPushMotor.setTargetPosition(maxSlidesPos);
 
             hw.slidesPivotMotor.setTargetPosition((int) (hw.slidesPivotMotor.getTargetPosition() - (pivot * PIVOT_INCREMENT)));
-            if(hw.slidesPivotMotor.getTargetPosition() < 0) hw.slidesPivotMotor.setTargetPosition(0);
-            if(hw.slidesPivotMotor.getTargetPosition() > MAX_PIVOT_POS) hw.slidesPivotMotor.setTargetPosition(MAX_PIVOT_POS);
+            if (hw.slidesPivotMotor.getTargetPosition() < minPivotPos && !gamepad2.b)
+                hw.slidesPivotMotor.setTargetPosition(minPivotPos);
+            if (gamepad2.b && hw.slidesPivotMotor.getTargetPosition() < 200) minPivotPos = hw.slidesPivotMotor.getCurrentPosition();
+            if (hw.slidesPivotMotor.getTargetPosition() > maxPivotPos && !gamepad2.b)
+                hw.slidesPivotMotor.setTargetPosition(maxPivotPos);
 
             if(gamepad2.dpad_up) intakePower = INTAKE_MAX_POWER;
             if(gamepad2.dpad_down) intakePower = -INTAKE_MAX_POWER;
             if(gamepad2.dpad_left) intakePower = 0;
-
 
             hw.intakeServo.setPower(intakePower);
             hw.telemetryHardware();

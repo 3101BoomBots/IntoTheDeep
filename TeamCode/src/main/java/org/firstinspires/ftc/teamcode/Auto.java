@@ -7,28 +7,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "AutoMain")
 public class Auto extends LinearOpMode{
-    static final double TICKS_PER_MOTOR_REV = 100; // needs to be changed
+    static final double TICKS_PER_MOTOR_REV = 537.7;
     static final double DRIVE_GEAR_REDUCTION = 1.0; // needs to be changed
-    static final double WHEEL_DIAMETER_INCHES = 100; // needs to be changed
+    static final double WHEEL_DIAMETER_INCHES = 5.512; // needs to be changed
     static final double TICKS_PER_INCH = (TICKS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
     final private double DEFAULT_POWER = 1.0;
     Hardware hw = Hardware.getInstance(this);
-//    PIDController drivePID = new PIDController(hw.encoderOdomX, 1, 0, 0);
-//    PIDController turnPID = new PIDController(hw.gyro, 1, 0, 0);
-
     @Override
     public void runOpMode() throws InterruptedException {
         hw.init(hardwareMap);
-
+        hw.setMotorsToRunToPosition();
         waitForStart();
-
-        hw.frontLeft.setPower(1);
-        hw.frontRight.setPower(-1);
-        hw.backRight.setPower(1);
-        hw.backLeft.setPower(-1);
-        hw.setTargets(40000);
-        while(opModeIsActive() && hw.notInRange(40000));
+        drive(12);
     }
 
     private void drive(double inches) {
@@ -36,6 +27,11 @@ public class Auto extends LinearOpMode{
     }
 
     private void drive(double inches, double power) {
+        int target = (int) (inches * TICKS_PER_INCH);
+        hw.setMotorsToPower(power);
+        hw.setTargets(target);
+        while(opModeIsActive() && hw.notInRange());
+        hw.setMotorsToPower(0);
     }
 
     private void turn(double degrees) {
