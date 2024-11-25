@@ -36,43 +36,27 @@ public class Hardware {
 
     public void init(HardwareMap hardwareMap) {
         frontLeft = hardwareMap.dcMotor.get("leftFront");
-//        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        opMode.telemetry.addData("FrontLeftMotor: ", "Initialized");
 
         frontRight = hardwareMap.dcMotor.get("rightFront");
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-//        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        opMode.telemetry.addData("FrontRightMotor: ", "Initialized.");
 
         backRight = hardwareMap.dcMotor.get("rightRear");
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-//        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        opMode.telemetry.addData("BackRightMotor: ", "Initialized.");
 
         backLeft = hardwareMap.dcMotor.get("leftRear");
-//        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         opMode.telemetry.addData("BackLeftMotor: ", "Initialized.");
 
         slidesPushMotor = hardwareMap.dcMotor.get("slides");
         slidesPushMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        slidesPushMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slidesPushMotor.setTargetPosition(0);
         slidesPushMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        slidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slidesPushMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         slidesPivotMotor = hardwareMap.dcMotor.get("pivot");
         slidesPivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slidesPivotMotor.setTargetPosition(0);
         slidesPivotMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        slidesPivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slidesPivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeServo = hardwareMap.crservo.get("intake");
 
         try {
