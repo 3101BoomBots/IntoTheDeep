@@ -20,6 +20,7 @@ public class Auto extends LinearOpMode{
         hw.setMotorsToRunToPosition();
         waitForStart();
         drive(12);
+        drive(-12);
     }
 
     private void drive(double inches) {
@@ -27,9 +28,16 @@ public class Auto extends LinearOpMode{
     }
 
     private void drive(double inches, double power) {
+//        int target = (int) ((inches * TICKS_PER_INCH) + (9 * TICKS_PER_INCH));
         int target = (int) (inches * TICKS_PER_INCH);
+
         hw.setMotorsToPower(power);
-        hw.setTargets(target);
+
+        hw.frontRight.setTargetPosition(hw.frontRight.getTargetPosition() + target);
+        hw.frontLeft.setTargetPosition(hw.frontLeft.getTargetPosition() + target);
+        hw.backRight.setTargetPosition(hw.backLeft.getTargetPosition() + target);
+        hw.backLeft.setTargetPosition(hw.backLeft.getTargetPosition() + target);
+
         while(opModeIsActive() && hw.notInRange());
         hw.setMotorsToPower(0);
     }
@@ -41,29 +49,23 @@ public class Auto extends LinearOpMode{
     private void turn(double degrees, double minPower, double threshold) {
     }
 
+    /**
+     @param inches - left is negative, right is positive
+     */
     private void strafe(double inches) {
         strafe(inches, DEFAULT_POWER);
     }
 
-    /**
-     * This should NOT be used in regular auto, this is just here as a backup method. Strafe will not
-     * have as much power as turning then driving which is the method which should be used instead
-     *  of strafing.
-    @param inches - left is negative, right is positive
-     */
     private void strafe(double inches, double power) {
-        int targetPos = (int) (inches/TICKS_PER_INCH);
-        hw.frontLeft.setTargetPosition(targetPos + hw.frontLeft.getCurrentPosition());
-        hw.frontRight.setTargetPosition(-targetPos + hw.frontRight.getCurrentPosition());
-        hw.backLeft.setTargetPosition(-targetPos + hw.backLeft.getCurrentPosition());
-        hw.backRight.setTargetPosition(targetPos + hw.backRight.getCurrentPosition());
-
+        int target = (int) (inches * TICKS_PER_INCH);
         hw.setMotorsToPower(power);
 
-        hw.setMotorsToRunToPosition();
-        while(opModeIsActive() && hw.notInRange(targetPos)){
-        }
+        hw.frontLeft.setTargetPosition(hw.frontLeft.getTargetPosition() + target);
+        hw.frontRight.setTargetPosition(hw.frontRight.getTargetPosition() - target);
+        hw.backLeft.setTargetPosition(hw.backLeft.getTargetPosition() - target);
+        hw.backRight.setTargetPosition(hw.backRight.getTargetPosition() + target);
 
+        while(opModeIsActive() && hw.notInRange());
         hw.setMotorsToPower(0);
     }
 }

@@ -17,6 +17,7 @@ public class Hardware {
     public DcMotor backLeft = null;
     public DcMotor slidesPushMotor = null;
     public DcMotor slidesPivotMotor = null;
+    public DcMotor hangingMotor = null;
     public CRServo intakeServo = null;  // CRServo = continuous servo
     private IMU gyro = null;
     private final OpMode opMode;
@@ -62,6 +63,10 @@ public class Hardware {
         slidesPivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slidesPivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        hangingMotor = hardwareMap.dcMotor.get("hanging");
+        hangingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        hangingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         intakeServo = hardwareMap.crservo.get("intake");
 
         gyro = hardwareMap.get(IMU.class, "imu");
@@ -103,7 +108,11 @@ public class Hardware {
     }
 
     public boolean notInRange() {
-        return notInRange(frontLeft.getTargetPosition());
+        return (notInRange(frontLeft.getTargetPosition()) &&
+                notInRange(frontRight.getTargetPosition()) &&
+                notInRange(backLeft.getTargetPosition()) &&
+                notInRange(backRight.getTargetPosition())
+        );
     }
 
     public boolean notInRange(int targetPos) {
@@ -133,13 +142,6 @@ public class Hardware {
         opMode.telemetry.addData("Pivot Motor Target: ", slidesPivotMotor.getTargetPosition());
         opMode.telemetry.addData("Intake Servo: ", intakeServo.getPower());
         opMode.telemetry.addData("IMU Angle: ", getGyroAngle());
-        opMode.telemetry.addData("FrontLeft ZeroPowerBehavior", frontLeft.getZeroPowerBehavior());
-        opMode.telemetry.addData("FrontRight ZeroPowerBehavior", frontRight.getZeroPowerBehavior());
-        opMode.telemetry.addData("BackLeft ZeroPowerBehavior", backLeft.getZeroPowerBehavior());
-        opMode.telemetry.addData("BackRight ZeroPowerBehavior", backRight.getZeroPowerBehavior());
-
-
-        opMode.telemetry.update();
     }
 
     public void setMotorsToRunToPosition() {

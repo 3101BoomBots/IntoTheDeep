@@ -14,7 +14,6 @@ public class TeleOpMain extends LinearOpMode{
     final double SLOW_POWER = 0.35;
     final int PIVOT_INCREMENT = 120;
     final double INTAKE_MAX_POWER = 1;
-    final int SLIDES_INCREMENT = 150;
 
     // kD is the constant difference between these positions and the minimum zero point
     final int kD_MAX_PIVOT = 5300;
@@ -28,6 +27,7 @@ public class TeleOpMain extends LinearOpMode{
     // 5163 PIVOT, 1971 Slides high basket
     int minSlidesPos = 0;
     int minPivotPos = 0;
+    int slidesIncrement;
     int maxSlidesPos;
     int tallMaxSlides;
     int maxPivotPos;
@@ -46,6 +46,9 @@ public class TeleOpMain extends LinearOpMode{
             facingDown = minPivotPos + kD_FACING_DOWN;
             maxSlidesPos = minSlidesPos + kD_MAX_SLIDES_POS;
             tallMaxSlides = minSlidesPos + kD_TALL_MAX_SLIDES;
+
+            if(hw.slidesPushMotor.getCurrentPosition() - 200 <= minSlidesPos) slidesIncrement = 45;
+            else slidesIncrement = 150;
 
             drive = -gamepad1.left_stick_y;
             strafe = gamepad1.left_stick_x;
@@ -75,7 +78,7 @@ public class TeleOpMain extends LinearOpMode{
             double slides = gamepad2.right_stick_y;
             double pivot = gamepad2.left_stick_y;
 
-            hw.slidesPushMotor.setTargetPosition((int) (hw.slidesPushMotor.getTargetPosition() - (slides * SLIDES_INCREMENT)));
+            hw.slidesPushMotor.setTargetPosition((int) (hw.slidesPushMotor.getTargetPosition() - (slides * slidesIncrement)));
             if (hw.slidesPushMotor.getTargetPosition() < minSlidesPos && !gamepad2.a)
                 hw.slidesPushMotor.setTargetPosition(minSlidesPos);
             if(gamepad2.a && hw.slidesPushMotor.getTargetPosition() < 200) minSlidesPos = hw.slidesPushMotor.getCurrentPosition();
@@ -99,7 +102,23 @@ public class TeleOpMain extends LinearOpMode{
             if(gamepad2.dpad_left) intakePower = 0;
 
             hw.intakeServo.setPower(intakePower);
+
+            if(gamepad1.y) {
+                hw.hangingMotor.setPower(1);
+                drive += 0.4;
+            }
+            if(gamepad1.x) {
+                hw.hangingMotor.setPower(0);
+                drive = 0;
+            }
+            if(gamepad1.a) {
+                hw.hangingMotor.setPower(-1);
+                drive -= 0.4;
+            }
+
+            telemetryMaxValues();
             hw.telemetryHardware();
+            telemetry.update();
         }
     }
 
@@ -107,5 +126,13 @@ public class TeleOpMain extends LinearOpMode{
         this.drive = 0;
         this.strafe = 0;
         this.turn = 0;
+    }
+
+    private void telemetryMaxValues() {
+        telemetry.addData("Max Pivot Pos", maxPivotPos);
+        telemetry.addData("Facing Up Pos", facingUp);
+        telemetry.addData("Facing Down Pos", facingDown);
+        telemetry.addData("Max Slides Pos", maxSlidesPos);
+        telemetry.addData("Max Tall Slides Pos", tallMaxSlides);
     }
 }
