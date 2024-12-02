@@ -67,6 +67,19 @@ public class TeleOpMain extends LinearOpMode{
 
             double maxPower = Math.max(Math.abs(drive) + Math.abs(turn) + Math.abs(strafe), 1.0);
 
+
+            if(gamepad1.y) {
+                hw.hangingMotor.setPower(1);
+//                hw.setMotorsToPower(0.5);
+            }
+            if(gamepad1.x) {
+                hw.hangingMotor.setPower(0);
+            }
+            if(gamepad1.a && !gamepad1.start) {
+                hw.hangingMotor.setPower(-1);
+//                hw.setMotorsToPower(-0.5);
+            }
+
             hw.frontLeft.setPower((drive + strafe + turn) / maxPower);
             hw.backLeft.setPower((drive - strafe + turn) / maxPower);
             hw.frontRight.setPower((drive - strafe - turn) / maxPower);
@@ -81,7 +94,7 @@ public class TeleOpMain extends LinearOpMode{
             hw.slidesPushMotor.setTargetPosition((int) (hw.slidesPushMotor.getTargetPosition() - (slides * slidesIncrement)));
             if (hw.slidesPushMotor.getTargetPosition() < minSlidesPos && !gamepad2.a)
                 hw.slidesPushMotor.setTargetPosition(minSlidesPos);
-            if(gamepad2.a && hw.slidesPushMotor.getTargetPosition() < 200) minSlidesPos = hw.slidesPushMotor.getCurrentPosition();
+            if(gamepad2.a && !gamepad2.start && hw.slidesPushMotor.getTargetPosition() < 200) minSlidesPos = hw.slidesPushMotor.getCurrentPosition();
 
             // Not facing straight ahead
             if (hw.slidesPivotMotor.getTargetPosition() > facingUp || hw.slidesPivotMotor.getTargetPosition() < facingDown) {
@@ -93,7 +106,7 @@ public class TeleOpMain extends LinearOpMode{
             hw.slidesPivotMotor.setTargetPosition((int) (hw.slidesPivotMotor.getTargetPosition() - (pivot * PIVOT_INCREMENT)));
             if (hw.slidesPivotMotor.getTargetPosition() < minPivotPos && !gamepad2.b)
                 hw.slidesPivotMotor.setTargetPosition(minPivotPos);
-            if (gamepad2.b && hw.slidesPivotMotor.getTargetPosition() < 200) minPivotPos = hw.slidesPivotMotor.getCurrentPosition();
+            if (gamepad2.b && !gamepad2.start && hw.slidesPivotMotor.getTargetPosition() < 200) minPivotPos = hw.slidesPivotMotor.getCurrentPosition();
             if (hw.slidesPivotMotor.getTargetPosition() > maxPivotPos && !gamepad2.b)
                 hw.slidesPivotMotor.setTargetPosition(maxPivotPos);
 
@@ -103,20 +116,7 @@ public class TeleOpMain extends LinearOpMode{
 
             hw.intakeServo.setPower(intakePower);
 
-            if(gamepad1.y) {
-                hw.hangingMotor.setPower(1);
-                drive += 0.4;
-            }
-            if(gamepad1.x) {
-                hw.hangingMotor.setPower(0);
-                drive = 0;
-            }
-            if(gamepad1.a) {
-                hw.hangingMotor.setPower(-1);
-                drive -= 0.4;
-            }
-
-            telemetryMaxValues();
+//            telemetryMaxValues();
             hw.telemetryHardware();
             telemetry.update();
         }

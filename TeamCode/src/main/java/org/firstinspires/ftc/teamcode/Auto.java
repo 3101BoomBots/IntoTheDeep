@@ -19,8 +19,14 @@ public class Auto extends LinearOpMode{
         hw.init(hardwareMap);
         hw.setMotorsToRunToPosition();
         waitForStart();
-        drive(12);
-        drive(-12);
+        while(opModeIsActive()){
+            drive(12);
+            drive(-12);
+            strafe(12);
+            strafe(-12);
+            turn(90);
+            turn(-90);
+        }
     }
 
     private void drive(double inches) {
@@ -47,6 +53,19 @@ public class Auto extends LinearOpMode{
     }
 
     private void turn(double degrees, double minPower, double threshold) {
+        hw.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hw.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hw.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hw.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        hw.backRight.setPower(minPower);
+        hw.frontRight.setPower(minPower);
+        hw.backLeft.setPower(-minPower);
+        hw.frontLeft.setPower(-minPower);
+        double error = degrees - hw.getGyroAngle();
+        while(Math.abs(error) > threshold) {}
+        hw.setMotorsToPower(0);
+        hw.setMotorsToRunToPosition();
     }
 
     /**
