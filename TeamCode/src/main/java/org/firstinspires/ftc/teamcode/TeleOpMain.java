@@ -16,11 +16,11 @@ public class TeleOpMain extends LinearOpMode{
     final double INTAKE_MAX_POWER = 1;
 
     // kD is the constant difference between these positions and the minimum zero point
-    final int kD_MAX_PIVOT = 5300;
+    final int kD_MAX_PIVOT = 4760;
     final int kD_FACING_UP = 2620;
     final int kD_FACING_DOWN = 2200;
     int kD_MAX_SLIDES_POS = 1675;
-    final int kD_TALL_MAX_SLIDES = 2250;
+    final int kD_TALL_MAX_SLIDES = 2450;
     // little more for safety
     // MAX - 90deg (perpendicular to robot)  = 5633
     // Straight ahead -2500

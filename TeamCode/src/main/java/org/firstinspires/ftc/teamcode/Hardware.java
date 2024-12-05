@@ -19,7 +19,7 @@ public class Hardware {
     public DcMotor slidesPivotMotor = null;
     public DcMotor hangingMotor = null;
     public CRServo intakeServo = null;  // CRServo = continuous servo
-    private IMU gyro = null;
+    public IMU gyro = null;
     private final OpMode opMode;
     private static Hardware myInstance;
 
@@ -74,6 +74,7 @@ public class Hardware {
         gyro.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
+        gyro.resetYaw();
 
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -142,6 +143,7 @@ public class Hardware {
         opMode.telemetry.addData("Pivot Motor Target: ", slidesPivotMotor.getTargetPosition());
         opMode.telemetry.addData("Intake Servo: ", intakeServo.getPower());
         opMode.telemetry.addData("IMU Angle: ", getGyroAngle());
+        opMode.telemetry.update();
     }
 
     public void setMotorsToRunToPosition() {
