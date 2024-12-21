@@ -12,15 +12,15 @@ public class TeleOpMain extends LinearOpMode{
     double turn;
 
     final double SLOW_POWER = 0.35;
-    final int PIVOT_INCREMENT = 120;
+    final int PIVOT_INCREMENT = 240;
     final double INTAKE_MAX_POWER = 1;
 
     // kD is the constant difference between these positions and the minimum zero point
-    final int kD_MAX_PIVOT = 4760;
-    final int kD_FACING_UP = 2620;
+    final int kD_MAX_PIVOT = 4820;
+    final int kD_FACING_UP = 3850;
     final int kD_FACING_DOWN = 2200;
-    int kD_MAX_SLIDES_POS = 1675;
-    final int kD_TALL_MAX_SLIDES = 2450;
+    int kD_MAX_SLIDES_POS = 1900;
+    final int kD_TALL_MAX_SLIDES = 3050;
     // little more for safety
     // MAX - 90deg (perpendicular to robot)  = 5633
     // Straight ahead -2500
@@ -68,17 +68,9 @@ public class TeleOpMain extends LinearOpMode{
             double maxPower = Math.max(Math.abs(drive) + Math.abs(turn) + Math.abs(strafe), 1.0);
 
 
-            if(gamepad1.y) {
-                hw.hangingMotor.setPower(1);
-//                hw.setMotorsToPower(0.5);
-            }
-            if(gamepad1.x) {
-                hw.hangingMotor.setPower(0);
-            }
-            if(gamepad1.a && !gamepad1.start) {
-                hw.hangingMotor.setPower(-1);
-//                hw.setMotorsToPower(-0.5);
-            }
+            if(gamepad1.y) hw.hangingMotor.setPower(1);
+            if(gamepad1.x) hw.hangingMotor.setPower(0);
+            if(gamepad1.a && !gamepad1.start) hw.hangingMotor.setPower(-1);
 
             hw.frontLeft.setPower((drive + strafe + turn) / maxPower);
             hw.backLeft.setPower((drive - strafe + turn) / maxPower);
@@ -96,21 +88,25 @@ public class TeleOpMain extends LinearOpMode{
                 hw.slidesPushMotor.setTargetPosition(minSlidesPos);
             if(gamepad2.a && !gamepad2.start && hw.slidesPushMotor.getTargetPosition() < 200) minSlidesPos = hw.slidesPushMotor.getCurrentPosition();
 
-            // Not facing straight ahead
-            if (hw.slidesPivotMotor.getTargetPosition() > facingUp || hw.slidesPivotMotor.getTargetPosition() < facingDown) {
+//             Not facing straight ahead
+            if (hw.slidesPivotMotor.getTargetPosition() > facingUp) {
                 if (hw.slidesPushMotor.getTargetPosition() > tallMaxSlides)
                     hw.slidesPushMotor.setTargetPosition(tallMaxSlides);
-            } else if (hw.slidesPushMotor.getTargetPosition() > maxSlidesPos && !gamepad2.a)
+            }
+            else if (hw.slidesPivotMotor.getTargetPosition() <= minPivotPos - 200 && hw.slidesPushMotor.getTargetPosition() > minSlidesPos && !gamepad2.a)
+                hw.slidesPushMotor.setTargetPosition(minSlidesPos);
+            else if (hw.slidesPushMotor.getTargetPosition() > maxSlidesPos && !gamepad2.a)
                 hw.slidesPushMotor.setTargetPosition(maxSlidesPos);
-
+//
             hw.slidesPivotMotor.setTargetPosition((int) (hw.slidesPivotMotor.getTargetPosition() - (pivot * PIVOT_INCREMENT)));
             if (hw.slidesPivotMotor.getTargetPosition() < minPivotPos && !gamepad2.b)
                 hw.slidesPivotMotor.setTargetPosition(minPivotPos);
-            if (gamepad2.b && !gamepad2.start && hw.slidesPivotMotor.getTargetPosition() < 200) minPivotPos = hw.slidesPivotMotor.getCurrentPosition();
+            if (gamepad2.b && !gamepad2.start && hw.slidesPivotMotor.getTargetPosition() < 200)
+                minPivotPos = hw.slidesPivotMotor.getCurrentPosition();
             if (hw.slidesPivotMotor.getTargetPosition() > maxPivotPos && !gamepad2.b)
                 hw.slidesPivotMotor.setTargetPosition(maxPivotPos);
 
-            if(gamepad2.dpad_up) intakePower = INTAKE_MAX_POWER;
+            if(gamepad2.dpad_up) intakePower = 0.5;
             if(gamepad2.dpad_down) intakePower = -INTAKE_MAX_POWER;
             if(gamepad2.dpad_left) intakePower = 0;
 
@@ -134,5 +130,10 @@ public class TeleOpMain extends LinearOpMode{
         telemetry.addData("Facing Down Pos", facingDown);
         telemetry.addData("Max Slides Pos", maxSlidesPos);
         telemetry.addData("Max Tall Slides Pos", tallMaxSlides);
+    }
+
+    private boolean positionClose(int pos, int target, double threshold) {
+        if (target == 0) return (target + threshold >= pos) && (target - threshold <= pos);
+        return (target * (1 + threshold) >= pos) && (target * (1 - threshold) <= pos);
     }
 }

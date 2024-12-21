@@ -108,6 +108,10 @@ public class Hardware {
         backRight.setTargetPosition(targetPos);
     }
 
+    public boolean motorsBusy() {
+        return (frontLeft.isBusy());
+    }
+
     public boolean notInRange() {
         return (notInRange(frontLeft.getTargetPosition()) &&
                 notInRange(frontRight.getTargetPosition()) &&
@@ -117,8 +121,7 @@ public class Hardware {
     }
 
     public boolean notInRange(int targetPos) {
-        return (notInRange(frontLeft, targetPos, 10) && notInRange(frontRight, targetPos, 10)
-                && notInRange(backLeft, targetPos, 10) && notInRange(backRight, targetPos, 10));
+        return notInRange(frontLeft, targetPos, 10);
     }
 
     public static boolean notInRange(DcMotor motor, int targetPos, int threshold) {
@@ -136,6 +139,10 @@ public class Hardware {
         opMode.telemetry.addData("FrontRightPosition: ", frontRight.getCurrentPosition());
         opMode.telemetry.addData("backRightPosition: ", backRight.getCurrentPosition());
         opMode.telemetry.addData("backLeftPosition: ", backLeft.getCurrentPosition());
+        opMode.telemetry.addData("FrontLeftTarget: ", frontLeft.getTargetPosition());
+        opMode.telemetry.addData("FrontRightTarget: ", frontRight.getTargetPosition());
+        opMode.telemetry.addData("backRightTarget: ", backRight.getTargetPosition());
+        opMode.telemetry.addData("backLeftTarget: ", backLeft.getTargetPosition());
         opMode.telemetry.addData("Arm", "");
         opMode.telemetry.addData("Slides Motor: ", slidesPushMotor.getCurrentPosition());
         opMode.telemetry.addData("Slides Motor Target: ", slidesPushMotor.getTargetPosition());

@@ -38,11 +38,11 @@ public class DriveEncoderLocalizer extends Localizer {
     private Encoder leftRear;
     private Encoder rightRear;
     private double totalHeading;
-    public static double FORWARD_TICKS_TO_INCHES = 31.0514;
+    public static double FORWARD_TICKS_TO_INCHES = 1;
     public static double STRAFE_TICKS_TO_INCHES = 1;
-    public static double TURN_TICKS_TO_RADIANS = 2;
-    public static double ROBOT_WIDTH = 17.2;
-    public static double ROBOT_LENGTH = 16;
+    public static double TURN_TICKS_TO_RADIANS = 1;
+    public static double ROBOT_WIDTH = 1;
+    public static double ROBOT_LENGTH = 1;
 
     /**
      * This creates a new DriveEncoderLocalizer from a HardwareMap, with a starting Pose at (0,0)
@@ -70,10 +70,10 @@ public class DriveEncoderLocalizer extends Localizer {
         rightFront = new Encoder(hardwareMap.get(DcMotorEx.class, rightFrontMotorName));
 
         // TODO: reverse any encoders necessary
-        leftFront.setDirection(Encoder.FORWARD);
-        rightRear.setDirection(Encoder.REVERSE);
-        leftRear.setDirection(Encoder.FORWARD);
-        rightFront.setDirection(Encoder.REVERSE);
+        leftFront.setDirection(Encoder.REVERSE);
+        leftRear.setDirection(Encoder.REVERSE);
+        rightFront.setDirection(Encoder.FORWARD);
+        rightRear.setDirection(Encoder.FORWARD);
 
         setStartPose(setStartPose);
         timer = new NanoTimer();
@@ -182,7 +182,7 @@ public class DriveEncoderLocalizer extends Localizer {
         globalDeltas = Matrix.multiply(Matrix.multiply(prevRotationMatrix, transformation), robotDeltas);
 
         displacementPose.add(new Pose(globalDeltas.get(0, 0), globalDeltas.get(1, 0), globalDeltas.get(2, 0)));
-        currentVelocity = new Pose(globalDeltas.get(0, 0) / (deltaTimeNano * Math.pow(10.0, 9)), globalDeltas.get(1, 0) / (deltaTimeNano * Math.pow(10.0, 9)), globalDeltas.get(2, 0) / (deltaTimeNano * Math.pow(10.0, 9)));
+        currentVelocity = new Pose(globalDeltas.get(0, 0) / (deltaTimeNano / Math.pow(10.0, 9)), globalDeltas.get(1, 0) / (deltaTimeNano / Math.pow(10.0, 9)), globalDeltas.get(2, 0) / (deltaTimeNano / Math.pow(10.0, 9)));
 
         totalHeading += globalDeltas.get(2, 0);
     }

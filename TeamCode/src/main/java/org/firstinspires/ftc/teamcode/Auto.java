@@ -12,28 +12,53 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class Auto extends LinearOpMode{
     static final double TICKS_PER_MOTOR_REV = 537.7;
     static final double DRIVE_GEAR_REDUCTION = 1.0;
-    static final double WHEEL_DIAMETER_INCHES = 5.512;
+    static final double WHEEL_DIAMETER_INCHES = 3.75 * ((double)25/24);
     static final double TICKS_PER_INCH = (TICKS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
-    final private double DEFAULT_POWER = 1.0;
+    final private double DEFAULT_POWER = 0.5;
+
+    final private int DISTANCE_TO_BASKET = 36;
+    final private int DEGREES_BASKET = 15;
     Hardware hw = Hardware.getInstance(this);
     @Override
     public void runOpMode() throws InterruptedException {
         hw.init(hardwareMap);
-        ElapsedTime elapsedTime = new ElapsedTime();
         hw.setMotorsToRunToPosition();
         waitForStart();
-        while(elapsedTime.seconds() < 5) hw.intakeServo.setPower(-1);
-        hw.slidesPivotMotor.setTargetPosition(200);
-        drive(20);
-        turn(-90);
-        drive(40);
-        turn(-45);
-        hw.slidesPivotMotor.setTargetPosition(4460);
-        hw.slidesPushMotor.setTargetPosition(2222);
-        while(opModeIsActive()) {
-            hw.telemetryHardware();
-        }
+        hw.slidesPivotMotor.setPower(0.7);
+        hw.slidesPushMotor.setPower(0.7);
+//        hw.slidesPivotMotor.setTargetPosition(540);
+//        hw.slidesPushMotor.setTargetPosition(230);
+        hw.intakeServo.setPower(-1);
+        sleep(5000);
+        hw.slidesPushMotor.setTargetPosition(200);
+        while(hw.slidesPushMotor.isBusy());
+        hw.slidesPivotMotor.setTargetPosition(1200);
+        strafe(2);
+        drive(DISTANCE_TO_BASKET);
+        hw.slidesPivotMotor.setTargetPosition(4800);
+        while(hw.slidesPivotMotor.isBusy());
+        hw.slidesPushMotor.setTargetPosition(2950);
+        while(hw.slidesPushMotor.isBusy());
+        turn(DEGREES_BASKET);
+        sleep(2000);
+        hw.intakeServo.setPower(0.5);
+        sleep(2000);
+        hw.intakeServo.setPower(0);
+        turn(-DEGREES_BASKET);
+        sleep(2000);
+        hw.slidesPivotMotor.setTargetPosition(4830);
+        sleep(250);
+        hw.slidesPushMotor.setTargetPosition(100);
+        hw.slidesPivotMotor.setTargetPosition(400);
+        drive(-15);
+        strafe(68);
+        drive(-33);
+        hw.hangingMotor.setPower(1);
+        sleep(1750);
+        hw.hangingMotor.setPower(0);
+        // red facing basket
+        hw.telemetryHardware();
     }
 
     private void drive(double inches) {
@@ -41,17 +66,17 @@ public class Auto extends LinearOpMode{
     }
 
     private void drive(double inches, double power) {
-//        int target = (int) ((inches * TICKS_PER_INCH) + (9 * TICKS_PER_INCH));
         int target = (int) (inches * TICKS_PER_INCH);
+//        int target = (int) (inches * TICKS_PER_INCH);
+
+        hw.frontRight.setTargetPosition(hw.frontRight.getCurrentPosition() + target);
+        hw.frontLeft.setTargetPosition(hw.frontLeft.getCurrentPosition() + target);
+        hw.backRight.setTargetPosition(hw.backRight.getCurrentPosition() + target);
+        hw.backLeft.setTargetPosition(hw.backLeft.getCurrentPosition() + target);
 
         hw.setMotorsToPower(power);
 
-        hw.frontRight.setTargetPosition(hw.frontRight.getTargetPosition() + target);
-        hw.frontLeft.setTargetPosition(hw.frontLeft.getTargetPosition() + target);
-        hw.backRight.setTargetPosition(hw.backLeft.getTargetPosition() + target);
-        hw.backLeft.setTargetPosition(hw.backLeft.getTargetPosition() + target);
-
-        while(opModeIsActive() && hw.notInRange()) hw.telemetryHardware();
+        while(opModeIsActive() && hw.motorsBusy()) hw.telemetryHardware();
         hw.setMotorsToPower(0);
     }
 
@@ -75,8 +100,10 @@ public class Auto extends LinearOpMode{
         hw.backLeft.setPower(-power);
         hw.frontLeft.setPower(-power);
         while(Math.abs(error) > threshold && opModeIsActive()) {
-            error = degrees - AngleUnit.normalizeDegrees(Math.abs(hw.getGyroAngle()));
-            hw.telemetryHardware();
+            error = degrees - AngleUnit.normalizeDegrees(hw.getGyroAngle());
+//            telemetry.addData("Error", error);
+//            telemetry.update();
+//            hw.telemetryHardware();
         }
         hw.setMotorsToPower(0);
         hw.setMotorsToRunToPosition();
@@ -92,14 +119,14 @@ public class Auto extends LinearOpMode{
 
     private void strafe(double inches, double power) {
         int target = (int) (inches * TICKS_PER_INCH);
-        hw.setMotorsToPower(power);
 
         hw.frontLeft.setTargetPosition(hw.frontLeft.getTargetPosition() + target);
         hw.frontRight.setTargetPosition(hw.frontRight.getTargetPosition() - target);
         hw.backLeft.setTargetPosition(hw.backLeft.getTargetPosition() - target);
         hw.backRight.setTargetPosition(hw.backRight.getTargetPosition() + target);
+        hw.setMotorsToPower(power);
 
-        while(opModeIsActive() && hw.notInRange()) hw.telemetryHardware();
+        while(opModeIsActive() && hw.motorsBusy()) hw.telemetryHardware();
         hw.setMotorsToPower(0);
     }
 }
