@@ -17,7 +17,7 @@ public class Auto extends LinearOpMode{
 
     final private double DEFAULT_POWER = 0.5;
 
-    final private int DISTANCE_TO_BASKET = 36;
+    final private int DISTANCE_TO_BASKET = 6;
     final private int DEGREES_BASKET = 15;
     Hardware hw = Hardware.getInstance(this);
     @Override
@@ -27,14 +27,12 @@ public class Auto extends LinearOpMode{
         waitForStart();
         hw.slidesPivotMotor.setPower(0.7);
         hw.slidesPushMotor.setPower(0.7);
-//        hw.slidesPivotMotor.setTargetPosition(540);
-//        hw.slidesPushMotor.setTargetPosition(230);
         hw.intakeServo.setPower(-1);
         sleep(5000);
         hw.slidesPushMotor.setTargetPosition(200);
         while(hw.slidesPushMotor.isBusy());
         hw.slidesPivotMotor.setTargetPosition(1200);
-        strafe(2);
+        strafe(19);
         drive(DISTANCE_TO_BASKET);
         hw.slidesPivotMotor.setTargetPosition(4800);
         while(hw.slidesPivotMotor.isBusy());
