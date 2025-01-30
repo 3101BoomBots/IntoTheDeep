@@ -19,8 +19,8 @@ public class TeleOpMain extends LinearOpMode{
     final int kD_MAX_PIVOT = 4820;
     final int kD_FACING_UP = 3850;
     final int kD_FACING_DOWN = 2200;
-    int kD_MAX_SLIDES_POS = 1900;
-    final int kD_TALL_MAX_SLIDES = 3050;
+    final int kD_MAX_SLIDES_POS = 1900;
+    final int kD_TALL_MAX_SLIDES = 3250;
     // little more for safety
     // MAX - 90deg (perpendicular to robot)  = 5633
     // Straight ahead -2500
