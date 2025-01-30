@@ -247,8 +247,8 @@ public class PedroAuto extends OpMode {
         robot.update();
         autonomousPathUpdate();
 
-        telemetry.addData("Path State", state);
-        telemetry.addData("Position", robot.getPose().toString());
+//        telemetry.addData("Path State", state);
+//        telemetry.addData("Position", robot.getPose().toString());
         robot.telemetryDebug(FtcDashboard.getInstance().getTelemetry());
         telemetry.setAutoClear(false);
         telemetry.update();
