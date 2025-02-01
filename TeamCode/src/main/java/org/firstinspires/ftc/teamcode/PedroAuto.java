@@ -39,9 +39,15 @@ public class PedroAuto extends OpMode {
 
         preloadPath = linearPathChain(initialPos, frontOfBasket);
 
-        basketPath = linearPathChain(frontOfBasket, basketForward);
+        basketPath = robot.pathBuilder()
+                .addPath(new BezierLine(new Point(frontOfBasket), new Point(basketForward)))
+                .setConstantHeadingInterpolation(45)
+                .build();
 
-        backBasketPath = linearPathChain(basketForward, frontOfBasket);
+        backBasketPath = robot.pathBuilder()
+                .addPath(new BezierLine(new Point(basketForward), new Point(frontOfBasket)))
+                .setConstantHeadingInterpolation(45)
+                .build();
 
         // Bezier Curve first point is start point, points in the middle are control points, last is end point
         sampleOnePath = robot.pathBuilder()
@@ -141,7 +147,7 @@ public class PedroAuto extends OpMode {
                 }
                 break;
             case 9:
-                if(!hw.slidesPushMotor.isBusy() && !hw.slidesPivotMotor.isBusy()) {
+                if(!hw.slidesPushMotor.isBusy() && !hw.slidesPivotMotor.isBusy() && !robot.isBusy()) {
                     hw.intakeServo.setPower(1);
                     while (pathTimer.getElapsedTimeSeconds() < 1.5) ; // time to outtake
                     hw.intakeServo.setPower(0);
@@ -181,19 +187,21 @@ public class PedroAuto extends OpMode {
                 break;
             case 16:
                 if(!robot.isBusy()) {
-                    robot.followPath(basketPath);
+                    robot.followPath(basketPath, true);
                     changeState(17);
                 }
                 break;
             case 17:
-                hw.intakeServo.setPower(1);
-                while (pathTimer.getElapsedTimeSeconds() < 1.5); // time to outtake
-                hw.intakeServo.setPower(0);
-                changeState(1801);
+                if (!robot.isBusy() && !hw.slidesPivotMotor.isBusy() && !hw.slidesPushMotor.isBusy()) {
+                    hw.intakeServo.setPower(1);
+                    while (pathTimer.getElapsedTimeSeconds() < 1.5); // time to outtake
+                    hw.intakeServo.setPower(0);
+                    changeState(1801);
+                }
                 break;
             case 1801:
                 if (!robot.isBusy()) {
-                    robot.followPath(backBasketPath);
+                    robot.followPath(backBasketPath, true);
                     changeState(18);
                 }
                 break;
@@ -224,12 +232,12 @@ public class PedroAuto extends OpMode {
                 break;
             case 23:
                 if (!robot.isBusy()) {
-                    robot.followPath(basketPath);
+                    robot.followPath(basketPath, true);
                     changeState(24);
                 }
                 break;
             case 24:
-                if(!hw.slidesPivotMotor.isBusy() && !hw.slidesPushMotor.isBusy()) {
+                if(!hw.slidesPivotMotor.isBusy() && !hw.slidesPushMotor.isBusy() && !robot.isBusy()) {
                     hw.intakeServo.setPower(1);
                     while (pathTimer.getElapsedTimeSeconds() < 1.5) ; // time to outtake
                     hw.intakeServo.setPower(0);
@@ -238,7 +246,7 @@ public class PedroAuto extends OpMode {
                 break;
             case 25:
                 if (!robot.isBusy()) {
-                    robot.followPath(backBasketPath);
+                    robot.followPath(backBasketPath, true);
                     changeState(26);
                 }
                 break;
@@ -289,7 +297,7 @@ public class PedroAuto extends OpMode {
     }
 
     private void intakeAtSample(int newState) {
-        if (robot.getCurrentPath().isAtParametricEnd()) {
+        if (!robot.isBusy()) {
             hw.slidesPushMotor.setTargetPosition(INTAKE_PUSH);
             hw.slidesPivotMotor.setTargetPosition(INTAKE_PIVOT);
             hw.intakeServo.setPower(-1);
